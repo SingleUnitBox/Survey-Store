@@ -15,6 +15,7 @@ class TakeItem(FlaskForm):
     take_item = BooleanField("take")
 
 class EditForm(FlaskForm):
-    edit = SubmitField()
+    bilsthorpe = SubmitField("Bilsthorpe")
+    tbh = SubmitField("TBH")
 
 

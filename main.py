@@ -101,8 +101,24 @@ def add_new_item():
 
 @app.route('/store/<int:item_id>', methods=["GET", "POST"])
 def take_items(item_id):
-
-
+    item = Item.query.get(item_id)
+    #print(item.location.name)
+    if item.location.name == "Bilsthorpe":
+        item.location_id = 4
+        #item.location_id = current_user.id
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
+    elif item.location_id == current_user.id:
+        item.location_id = 5
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
+    elif item.location_id == 4:
+        item.location_id = current_user.id
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
