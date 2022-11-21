@@ -1,0 +1,21 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{% include "header.html" %}
+
+<table>
+{% for item in all_items%}
+<tr>
+   <td>{{ item.id }}</td>
+   <td>{{ item.name }}</td>
+   <td>{{item.location.name}}</td>
+   <td>{{ item.date }}</td>
+   <td><a href="{{url_for('take_items', item_id=item.id) }}">✅</a></td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
+{% endblock %}

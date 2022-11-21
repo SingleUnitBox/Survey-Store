@@ -12,7 +12,10 @@ class LoginForm(FlaskForm):
     login_in = SubmitField("Log me in!")
 
 class TakeItem(FlaskForm):
-    take_item = BooleanField()
+    take_item = BooleanField("take")
 
-class ConfirmForm(FlaskForm):
-    confirm = SubmitField("Take Items")
+class EditForm(FlaskForm):
+    bilsthorpe = SubmitField("Bilsthorpe")
+    tbh = SubmitField("TBH")
+
+

@@ -4,7 +4,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.testing import db
-from forms import AddNewItemForm, LoginForm, TakeItem, ConfirmForm
+from forms import AddNewItemForm, LoginForm, TakeItem, EditForm
 from datetime import date, datetime
 from functools import wraps
 
@@ -99,23 +99,27 @@ def add_new_item():
         return redirect(url_for("home"))
     return render_template("add_new_item.html", form=form, logged_in=current_user.is_authenticated)
 
-@app.route('/store', methods=["GET", "POST"])
-def take_items():
-    form = TakeItem()
-    form_confirm = ConfirmForm()
-    items = Item.query.all()
-    free_items=[]
-    location = ["TBH", "Bilsthorpe"]
-    for item in items:
-        #print(item.location.name)
-        if item.location.name in location:
-            free_items.append(item)
-            #if form_confirm.validate_on_submit():
-
-    return render_template("take.html", all_items=free_items, logged_in=current_user.is_authenticated, form=form, form1=form_confirm)
-
-
-
+@app.route('/store/<int:item_id>', methods=["GET", "POST"])
+def take_items(item_id):
+    item = Item.query.get(item_id)
+    #print(item.location.name)
+    if item.location.name == "Bilsthorpe":
+        item.location_id = 4
+        #item.location_id = current_user.id
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
+    elif item.location_id == current_user.id:
+        item.location_id = 5
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
+    elif item.location_id == 4:
+        item.location_id = current_user.id
+        item.date = datetime.now().strftime("%d/%m/%y %H:%M")
+        db.session.commit()
+        return redirect(url_for('home'))
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
