@@ -7,9 +7,10 @@ from sqlalchemy.testing import db
 from forms import AddNewItemForm, LoginForm, TakeItem, EditForm
 from datetime import date, datetime
 from functools import wraps
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'czczcz'
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 Bootstrap(app)
 
 login_manager = LoginManager()
@@ -27,7 +28,7 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///store.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
