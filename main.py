@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -7,7 +8,6 @@ from sqlalchemy.testing import db
 from forms import AddNewItemForm, LoginForm, TakeItem, EditForm
 from datetime import date, datetime
 from functools import wraps
-import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'xfd{Hxe5<x95f9xe3x96.5xd1x01O<!xd5x'
@@ -28,8 +28,8 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 ##CONNECT TO DB
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///store.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",  "sqlite:///store.db")
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
