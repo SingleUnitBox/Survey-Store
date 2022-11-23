@@ -1,6 +1,6 @@
 {% include "header.html" %}
 
-
+{% block content %}
 <table>
 {% for item in all_items%}
 <tr>
@@ -8,7 +8,7 @@
    <td>{{ item.name }}</td>
    <td>{{item.location.name}}</td>
    <td>{{ item.date }}</td>
-   {% if (logged_in) and (item.location.name == "TBH") or (logged_in) and (item.location.name == "Bilsthorpe")%}
+   {% if (logged_in) and ((item.location.name == "TBH") or (item.location.name == "Bilsthorpe") or ( not item.location_id))%}
    <td><a href="{{url_for('take_items', item_id=item.id) }}">✅</a></td>
    {% elif (logged_in) and (item.location.name == current_user.name)%}
    <td><a href="{{url_for('take_items', item_id=item.id) }}">❌</a></td>
@@ -16,6 +16,4 @@
 </tr>
 {% endfor %}
 </table>
-
-</body>
-</html>
+{% endblock %}
