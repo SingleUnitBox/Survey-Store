@@ -1,10 +1,12 @@
 {% include "header.html" %}
 
 {% block content %}
+
 <table>
 {% for item in all_items%}
 <tr>
-   <td>{{ item.id }}</td>
+
+   <td>{{ item.id }} {% if current_user.id == 1%} <a href="{{url_for('delete', item_id=item.id) }}">❌</a> {% endif %}</td>
    <td>{{ item.name }}</td>
    <td>{{item.location.name}}</td>
    <td>{{ item.date }}</td>
@@ -16,4 +18,5 @@
 </tr>
 {% endfor %}
 </table>
+
 {% endblock %}

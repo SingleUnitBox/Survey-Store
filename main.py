@@ -123,6 +123,14 @@ def take_items(item_id):
         return redirect(url_for('home'))
     return redirect(url_for('home'))
 
+@app.route('/delete/<int:item_id>')
+@admin_only
+def delete(item_id):
+    item_to_delete = Item.query.get(item_id)
+    db.session.delete(item_to_delete)
+    db.session.commit()
+    return redirect(url_for('home'))
+
 if __name__ == "__main__":
     app.run(debug=True)
     #app.run(host='0.0.0.0', port=5000)
