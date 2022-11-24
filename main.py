@@ -3,10 +3,9 @@ from flask import Flask, render_template, redirect, url_for, flash, request, abo
 from flask_bootstrap import Bootstrap
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
 from sqlalchemy.testing import db
 from forms import AddNewItemForm, LoginForm, RegisterForm
-from datetime import date, datetime
+from datetime import datetime
 from functools import wraps
 
 app = Flask(__name__)
@@ -32,28 +31,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'sqlite:/
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-class User(UserMixin, db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    password = db.Column(db.String(100))
-    name = db.Column(db.String(20), unique=True, nullable=False)
-    items = relationship("Item", back_populates="location")
-
-    def __repr__(self):
-        return f"User({self.name}, {self.password})"
-
-
-class Item(db.Model):
-    __tablename__ = "items"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    date = db.Column(db.String(20), nullable=False, default=datetime.now().strftime("%d/%m/%y %H:%M"))
-
-    location_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    location = relationship("User", back_populates="items")
-
-
+from models import User, Item
 # with app.app_context():
 #     db.create_all()
 #     db.session.commit()
