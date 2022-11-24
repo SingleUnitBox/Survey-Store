@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, URL
+from wtforms.validators import DataRequired, URL, Length, Email, EqualTo
 from flask_ckeditor import CKEditorField
 
 class AddNewItemForm(FlaskForm):
@@ -9,13 +9,14 @@ class AddNewItemForm(FlaskForm):
 class LoginForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
-    login_in = SubmitField("Log me in!")
+    remember = BooleanField("Remember Me")
+    login_in = SubmitField("Log me in")
 
-class TakeItem(FlaskForm):
-    take_item = BooleanField("take")
-
-class EditForm(FlaskForm):
-    bilsthorpe = SubmitField("Bilsthorpe")
-    tbh = SubmitField("TBH")
+class RegisterForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    confirm_password = PasswordField("Confirm password", validators=[DataRequired(), EqualTo("password")])
+    register = SubmitField("Register")
 
 

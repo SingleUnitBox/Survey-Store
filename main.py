@@ -5,7 +5,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.testing import db
-from forms import AddNewItemForm, LoginForm, TakeItem, EditForm
+from forms import AddNewItemForm, LoginForm, RegisterForm
 from datetime import date, datetime
 from functools import wraps
 
@@ -77,7 +77,26 @@ def login():
             else:
                 login_user(user)
                 return redirect(url_for(("home")))
-    return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
+    return render_template("login.html", form=form, logged_in=current_user.is_authenticated, title="Log in")
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        password = form.password.data
+        confirm_password = form.confirm_password.data
+        with app.app_context():
+            user = db.session.query(User).filter_by(name=name).first()
+            if user:
+                flash("You are registered already. Please Log In instead.")
+                return redirect(url_for(("login")))
+            elif password != confirm_password:
+                flash("Passwords do not match. Please try again.")
+                return redirect(url_for(("register")))
+
+
+    return render_template("register.html", form=form, title="Register")
 
 @app.route('/logout')
 def logout():
@@ -99,7 +118,7 @@ def add_new_item():
             db.session.add(new_item)
             db.session.commit()
         return redirect(url_for("home"))
-    return render_template("add_new_item.html", form=form, logged_in=current_user.is_authenticated)
+    return render_template("add_new_item.html", form=form, logged_in=current_user.is_authenticated, title="Add")
 
 @app.route('/store/<int:item_id>', methods=["GET", "POST"])
 def take_items(item_id):
