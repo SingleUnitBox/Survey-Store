@@ -37,15 +37,18 @@ class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     password = db.Column(db.String(100))
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(20), unique=True, nullable=False)
     items = relationship("Item", back_populates="location")
+
+    def __repr__(self):
+        return f"User({self.name}, {self.password})"
 
 
 class Item(db.Model):
     __tablename__ = "items"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    date = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.String(20), nullable=False, default=datetime.now().strftime("%d/%m/%y %H:%M"))
 
     location_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     location = relationship("User", back_populates="items")
@@ -58,7 +61,7 @@ class Item(db.Model):
 @app.route('/')
 def home():
     items = Item.query.all()
-    return render_template("index.html", all_items=items, logged_in=current_user.is_authenticated)
+    return render_template("index.html", all_items=items, logged_in=current_user.is_authenticated, user=current_user)
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -94,6 +97,9 @@ def register():
             elif password != confirm_password:
                 flash("Passwords do not match. Please try again.")
                 return redirect(url_for(("register")))
+            else:
+                flash(f"Account for {name} created.")
+                return redirect(url_for(("home")))
 
 
     return render_template("register.html", form=form, title="Register")
@@ -112,7 +118,7 @@ def add_new_item():
         new_item = Item(
             name=form.name.data,
             location=current_user,
-            date=datetime.now().strftime("%d/%m/%y %H:%M")
+            #date=datetime.now().strftime("%d/%m/%y %H:%M")
         )
         with app.app_context():
             db.session.add(new_item)
