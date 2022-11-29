@@ -27,7 +27,7 @@ def home_page():
 #@login_required
 def store_page():
     items = Item.query.all()
-    return render_template("store.html", items=items, )
+    return render_template("store.html", items=items)
 
 
 @app.route('/register', methods=["GET", "POST"])
