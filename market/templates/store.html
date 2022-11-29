@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Survey Store
+{% endblock %}
+
+{% block content %}
+<table class="table table-hover table-dark">
+    <thead>
+    <tr>
+        <!-- Your Columns HERE -->
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Date/Time</th>
+        <th scope="col">Location/Surveyor</th>
+        <th scope="col">Option</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Your rows inside the table HERE: -->
+    {% for item in items %}
+    <tr>
+        <td>{{ item.id }} {% if current_user.id == 1%} <a href="{{url_for('delete', item_id=item.id) }}">❌</a> {% endif
+            %}
+        </td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.date }}</td>
+        <td>{{ item.location }}</td>
+        <td>
+            {% if current_user.is_authenticated and ((item.location.username == "TBH") or (item.location.username ==
+            "Bilsthorpe")) %}
+            <a class="btn btn-success" href="{{url_for('take_items', item_id=item.id) }}" role="button">Take</a>
+            {% elif item.location.username == current_user.username %}
+            <a class="btn btn-danger" href="{{url_for('take_items', item_id=item.id) }}" role="button">Drop</a>
+            {% endif %}
+        </td>
+        <!--        <a href="">✅</a>-->
+        <!--        <a href="">❌</a>-->
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
